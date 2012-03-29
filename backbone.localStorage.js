@@ -53,13 +53,15 @@ _.extend(Backbone.LocalStorage.prototype, {
 
   // Retrieve a model from `this.data` by id.
   find: function(model) {
-    return JSON.parse(this.localStorage().getItem(this.name+"-"+model.id));
+    var item = this.localStorage().getItem(this.name+"-"+model.id);
+    if(!item) return undefined;
+    return JSON.parse(item);
   },
 
   // Return the array of all models currently in storage.
   findAll: function() {
     return _(this.records).chain()
-        .map(function(id){return JSON.parse(this.localStorage().getItem(this.name+"-"+id));}, this)
+        .map(function(id){return var item = this.localStorage().getItem(this.name+"-"+id); if(!item) return undefined; return JSON.parse(item); }, this)
         .compact()
         .value();
   },
